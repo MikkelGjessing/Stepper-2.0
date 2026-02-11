@@ -223,7 +223,7 @@ function createSteppingStones(container, currentStep, totalSteps) {
   
   container.appendChild(boy);
   
-  // Position boy on current stone
+  // Position boy on current stone (currentStep is 1-based, stones array is 0-based)
   if (stones[currentStep - 1]) {
     positionBoyOnStone(boy, stones[currentStep - 1], container);
   }
@@ -239,7 +239,8 @@ function positionBoyOnStone(boy, stone, container) {
   
   // Add jumping animation
   boy.classList.remove('jumping');
-  boy.getBoundingClientRect(); // Trigger reflow to restart animation
+  // Trigger reflow to restart CSS animation (return value intentionally unused)
+  boy.getBoundingClientRect();
   boy.classList.add('jumping');
 }
 
