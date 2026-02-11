@@ -1,0 +1,318 @@
+/* Watercolor Theme - Inspired by Monet's Water Lilies and gentle storybook illustrations */
+
+/* Theme active indicator */
+body.watercolor-theme {
+  /* Soft pastel color palette inspired by Monet's Water Lilies */
+  --primary-color: #9db4c0;
+  --primary-hover: #7a9aaa;
+  --secondary-color: #c5b9c4;
+  --secondary-hover: #a897a7;
+  --success-color: #a8d5ba;
+  --success-bg: #e8f5e9;
+  --warning-color: #f4c89f;
+  --warning-bg: #fff8e1;
+  --info-color: #a5c9e5;
+  --info-bg: #e3f2fd;
+  --text-primary: #5a5a5a;
+  --text-secondary: #8a8a8a;
+  --border-color: #d5e5e5;
+  --bg-color: #fefdfb;
+  --bg-secondary: #f5f3f0;
+  --shadow: 0 2px 8px rgba(157, 180, 192, 0.15);
+  --shadow-lg: 0 8px 24px rgba(157, 180, 192, 0.25);
+  
+  /* Watercolor-specific colors */
+  --watercolor-blue: #a5c9e5;
+  --watercolor-green: #b8d8be;
+  --watercolor-pink: #e5b8c0;
+  --watercolor-yellow: #f4e5a8;
+  --watercolor-purple: #c5b9e5;
+}
+
+/* Watercolor texture overlay */
+body.watercolor-theme::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(165, 201, 229, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(184, 216, 190, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(244, 229, 168, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.watercolor-theme .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Soft, hand-drawn style borders */
+body.watercolor-theme .section {
+  border: 2px solid transparent;
+  background: 
+    linear-gradient(var(--bg-color), var(--bg-color)) padding-box,
+    linear-gradient(135deg, var(--watercolor-blue), var(--watercolor-green), var(--watercolor-pink)) border-box;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* Header watercolor style */
+body.watercolor-theme .header {
+  border-bottom: 3px solid var(--border-color);
+  position: relative;
+}
+
+body.watercolor-theme .header h1 {
+  color: var(--watercolor-blue);
+  text-shadow: 1px 1px 2px rgba(165, 201, 229, 0.3);
+}
+
+/* Buttons with watercolor appearance */
+body.watercolor-theme .btn-primary {
+  background: linear-gradient(135deg, var(--watercolor-blue) 0%, var(--watercolor-purple) 100%);
+  border: 2px solid rgba(165, 201, 229, 0.3);
+  box-shadow: 0 4px 12px rgba(165, 201, 229, 0.3);
+}
+
+body.watercolor-theme .btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #7a9aaa 0%, #a897c5 100%);
+  box-shadow: 0 6px 16px rgba(165, 201, 229, 0.4);
+  transform: translateY(-2px);
+}
+
+body.watercolor-theme .btn-secondary {
+  background: linear-gradient(135deg, var(--watercolor-pink) 0%, var(--watercolor-purple) 100%);
+  border: 2px solid rgba(197, 185, 229, 0.3);
+}
+
+body.watercolor-theme .btn-outline {
+  border: 2px solid var(--watercolor-blue);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+body.watercolor-theme .btn-outline:hover:not(:disabled) {
+  background: rgba(165, 201, 229, 0.15);
+  border-color: var(--watercolor-purple);
+}
+
+/* Message boxes with watercolor edges */
+body.watercolor-theme .message-box {
+  border-left-width: 6px;
+  border-radius: 12px;
+  position: relative;
+}
+
+body.watercolor-theme .message-success {
+  background: var(--success-bg);
+  border-color: var(--watercolor-green);
+  box-shadow: 4px 4px 12px rgba(184, 216, 190, 0.2);
+}
+
+body.watercolor-theme .message-warning {
+  background: var(--warning-bg);
+  border-color: var(--watercolor-yellow);
+  box-shadow: 4px 4px 12px rgba(244, 229, 168, 0.2);
+}
+
+body.watercolor-theme .message-info {
+  background: var(--info-bg);
+  border-color: var(--watercolor-blue);
+  box-shadow: 4px 4px 12px rgba(165, 201, 229, 0.2);
+}
+
+/* Step number badge */
+body.watercolor-theme .step-number {
+  background: linear-gradient(135deg, var(--watercolor-blue), var(--watercolor-purple));
+  box-shadow: 0 2px 8px rgba(165, 201, 229, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+/* Step content with watercolor feel */
+body.watercolor-theme .step-content {
+  background: rgba(245, 243, 240, 0.6);
+  border-left: 4px solid var(--watercolor-blue);
+  border-radius: 12px;
+  box-shadow: inset 2px 2px 8px rgba(165, 201, 229, 0.1);
+}
+
+/* Progress bar replacement: Stepping stones animation */
+body.watercolor-theme .progress-bar {
+  height: 80px;
+  background: transparent;
+  position: relative;
+  margin: 24px 0;
+  overflow: visible;
+}
+
+/* Hide default progress fill */
+body.watercolor-theme .progress-fill {
+  display: none;
+}
+
+/* Create stepping stones */
+body.watercolor-theme .progress-bar::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: linear-gradient(90deg, 
+    var(--watercolor-blue) 0%, 
+    var(--watercolor-green) 50%, 
+    var(--watercolor-purple) 100%);
+  opacity: 0.2;
+  border-radius: 6px;
+}
+
+/* Stepping stones container */
+body.watercolor-theme .progress-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 10px;
+}
+
+/* Individual stones will be created via JavaScript */
+.stepping-stone {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--watercolor-green), var(--watercolor-blue));
+  border-radius: 50% 45% 50% 45%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  position: relative;
+  opacity: 0.4;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+.stepping-stone.active {
+  opacity: 1;
+  box-shadow: 0 6px 16px rgba(165, 201, 229, 0.4);
+  transform: scale(1.1);
+}
+
+.stepping-stone.completed {
+  opacity: 1;
+  background: linear-gradient(135deg, var(--watercolor-purple), var(--watercolor-pink));
+}
+
+/* Cartoon boy character */
+.cartoon-boy {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: left 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+  z-index: 10;
+}
+
+/* Boy jumping animation */
+@keyframes hop {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-15px);
+  }
+}
+
+.cartoon-boy.jumping {
+  animation: hop 0.6s ease-in-out;
+}
+
+/* SVG boy illustration - simple, charming style */
+.cartoon-boy svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Input fields with softer appearance */
+body.watercolor-theme .input-group textarea,
+body.watercolor-theme input[type="text"] {
+  border: 2px solid var(--watercolor-blue);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+}
+
+body.watercolor-theme .input-group textarea:focus,
+body.watercolor-theme input[type="text"]:focus {
+  border-color: var(--watercolor-purple);
+  box-shadow: 0 0 0 3px rgba(197, 185, 229, 0.2);
+}
+
+/* Article content styling */
+body.watercolor-theme .article-header {
+  border-bottom: 3px solid var(--border-color);
+}
+
+body.watercolor-theme .article-header h2 {
+  color: var(--watercolor-blue);
+}
+
+/* Soft fade-in animation */
+body.watercolor-theme .section:not(.hidden) {
+  animation: watercolorFadeIn 0.5s ease;
+}
+
+@keyframes watercolorFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Gentle ripple effect on buttons */
+body.watercolor-theme .btn {
+  position: relative;
+  overflow: hidden;
+}
+
+body.watercolor-theme .btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+body.watercolor-theme .btn:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Decorative watercolor splashes */
+body.watercolor-theme .header::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 8px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    var(--watercolor-blue) 30%, 
+    var(--watercolor-purple) 70%, 
+    transparent);
+  opacity: 0.3;
+  border-radius: 50%;
+  filter: blur(4px);
+}

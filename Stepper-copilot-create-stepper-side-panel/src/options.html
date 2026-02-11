@@ -183,6 +183,22 @@
       font-family: 'Courier New', monospace;
       font-size: 13px;
     }
+
+    /* Checkbox styling */
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    label:has(input[type="checkbox"]) {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 15px;
+    }
   </style>
 </head>
 <body>
@@ -233,6 +249,20 @@
     </div>
 
     <div class="section">
+      <h2>Theme Settings</h2>
+      <p class="description">
+        Choose between the classic theme or a playful watercolor theme inspired by Monet's Water Lilies.
+      </p>
+      
+      <label>
+        <input type="checkbox" id="watercolorTheme" />
+        Enable Watercolor Theme
+      </label>
+      
+      <div id="themeStatus" class="status"></div>
+    </div>
+
+    <div class="section">
       <h2>Expected JSON Format</h2>
       <p class="description">
         Your KB source URL should return a JSON array with the following structure:
@@ -271,6 +301,8 @@
     const clearCacheBtn = document.getElementById('clearCacheBtn');
     const statusDiv = document.getElementById('status');
     const cacheInfoDiv = document.getElementById('cacheInfo');
+    const watercolorThemeCheckbox = document.getElementById('watercolorTheme');
+    const themeStatusDiv = document.getElementById('themeStatus');
 
     // Load current settings
     async function loadSettings() {
@@ -279,6 +311,10 @@
       const url = getKBSourceUrl();
       kbUrlInput.value = url || '';
       await updateCacheInfo();
+      
+      // Load theme setting
+      const result = await chrome.storage.local.get(['watercolorTheme']);
+      watercolorThemeCheckbox.checked = result.watercolorTheme || false;
     }
 
     // Show status message
@@ -287,6 +323,15 @@
       statusDiv.className = `status ${type}`;
       setTimeout(() => {
         statusDiv.className = 'status';
+      }, 5000);
+    }
+
+    // Show theme status message
+    function showThemeStatus(message, type = 'info') {
+      themeStatusDiv.textContent = message;
+      themeStatusDiv.className = `status ${type}`;
+      setTimeout(() => {
+        themeStatusDiv.className = 'status';
       }, 5000);
     }
 
@@ -383,6 +428,16 @@
 
     // Load settings on page load
     loadSettings();
+
+    // Handle theme toggle
+    watercolorThemeCheckbox.addEventListener('change', async () => {
+      try {
+        await chrome.storage.local.set({ watercolorTheme: watercolorThemeCheckbox.checked });
+        showThemeStatus('✓ Theme preference saved', 'success');
+      } catch (error) {
+        showThemeStatus(`✗ Failed to save theme: ${error.message}`, 'error');
+      }
+    });
   </script>
 </body>
 </html>
