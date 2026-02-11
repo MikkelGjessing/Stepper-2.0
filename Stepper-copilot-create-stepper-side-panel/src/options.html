@@ -307,15 +307,22 @@
 
     // Load current settings
     async function loadSettings() {
-      // Ensure KB loader is initialized before getting URL
-      await initKBLoader();
-      const url = getKBSourceUrl();
-      kbUrlInput.value = url || '';
-      await updateCacheInfo();
-      
-      // Load theme setting
-      const result = await chrome.storage.local.get(['watercolorTheme']);
-      watercolorThemeCheckbox.checked = result.watercolorTheme || false;
+      try {
+        // Ensure KB loader is initialized before getting URL
+        await initKBLoader();
+        const url = getKBSourceUrl();
+        kbUrlInput.value = url || '';
+        await updateCacheInfo();
+        
+        // Load theme setting
+        if (watercolorThemeCheckbox) {
+          const result = await chrome.storage.local.get(['watercolorTheme']);
+          watercolorThemeCheckbox.checked = result.watercolorTheme || false;
+        }
+      } catch (error) {
+        console.error('Failed to load settings:', error);
+        showStatus(`Failed to load settings: ${error.message}`, 'error');
+      }
     }
 
     // Show status message
