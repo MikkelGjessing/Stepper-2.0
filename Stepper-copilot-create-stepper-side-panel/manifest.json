@@ -12,7 +12,8 @@
     "default_path": "src/sidepanel.html"
   },
   "permissions": [
-    "sidePanel"
+    "sidePanel",
+    "storage"
   ],
   "action": {
     "default_title": "Open Stepper"

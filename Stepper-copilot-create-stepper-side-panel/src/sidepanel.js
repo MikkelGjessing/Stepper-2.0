@@ -1,5 +1,5 @@
 // UI Module - Main controller for the Stepper side panel
-import { findBestMatch } from './kb.js';
+import { findBestMatch } from './kb-loader.js';
 import { StepManager } from './stepper.js';
 
 // Initialize step manager
@@ -48,7 +48,7 @@ function hideAllSections() {
 }
 
 // Search for solution
-function searchForSolution() {
+async function searchForSolution() {
   const query = issueInput.value.trim();
   
   if (!query) {
@@ -56,7 +56,7 @@ function searchForSolution() {
     return;
   }
 
-  const article = findBestMatch(query);
+  const article = await findBestMatch(query);
   
   if (article) {
     stepManager.setArticle(article);
