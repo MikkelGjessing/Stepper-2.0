@@ -28,7 +28,7 @@ async function initTheme() {
         }
       });
     } catch (error) {
-      console.warn('Chrome storage not available, using default theme');
+      console.warn('Chrome storage not available for theme persistence');
     }
   } else {
     // For testing outside extension context, check URL parameter
@@ -239,7 +239,7 @@ function positionBoyOnStone(boy, stone, container) {
   
   // Add jumping animation
   boy.classList.remove('jumping');
-  void boy.offsetWidth; // Trigger reflow
+  boy.getBoundingClientRect(); // Trigger reflow to restart animation
   boy.classList.add('jumping');
 }
 
