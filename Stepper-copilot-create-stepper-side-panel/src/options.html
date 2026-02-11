@@ -284,6 +284,17 @@
   </div>
 
   <script type="module">
+    // Check if running in extension context
+    if (typeof chrome === 'undefined' || !chrome.storage) {
+      console.error('This page must be opened as a Chrome extension options page');
+      document.body.innerHTML = '<div style="padding: 40px; text-align: center;">' +
+        '<h1>⚠️ Extension Context Required</h1>' +
+        '<p>This options page must be opened from within the Chrome extension.</p>' +
+        '<p>Please install the extension and access options through the extension icon.</p>' +
+        '</div>';
+      throw new Error('Extension context required');
+    }
+
     import { 
       setKBSourceUrl, 
       getKBSourceUrl, 
