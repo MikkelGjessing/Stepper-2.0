@@ -14,6 +14,7 @@ Stepper is a browser extension that provides step-by-step support guidance throu
 - 📄 **Full Article View**: Option to view all steps at once
 - ⚠️ **Feedback Mechanism**: "This didn't work" button for user feedback
 - 🎨 **Modern UI**: Clean, intuitive interface with visual progress indicators
+- 🌈 **Watercolor Theme**: Optional playful theme inspired by Monet's Water Lilies with animated stepping stones
 - 🏗️ **Modular Architecture**: Separate modules for UI, retrieval, and step logic
 - 🌐 **Remote KB Support**: Fetch knowledge base articles from a remote URL with automatic fallback to local mock KB
 - 💾 **Smart Caching**: Cache fetched articles locally for better performance with automatic refresh on demand
@@ -28,8 +29,9 @@ The extension is built with a clean modular architecture:
 - **`src/sidepanel.js`**: UI module - controls user interactions and view updates
 - **`src/sidepanel.html`**: HTML structure for the side panel
 - **`src/sidepanel.css`**: Modern styling for the UI
+- **`src/watercolor-theme.css`**: Watercolor theme styling with pastel colors and animations
 - **`src/background.js`**: Background service worker for extension setup
-- **`src/options.html`**: Options page for configuring KB source URL and cache management
+- **`src/options.html`**: Options page for configuring KB source URL, cache management, and theme selection
 
 ## Installation
 
@@ -89,6 +91,28 @@ The extension can fetch articles from a remote JSON endpoint:
 ]
 ```
 
+### Choosing a Theme (Optional)
+
+Stepper offers two visual themes:
+
+1. **Classic Theme** (Default): Modern, professional interface with clean lines and vibrant colors
+2. **Watercolor Theme**: Playful, gentle theme inspired by Monet's Water Lilies and classic storybook illustrations
+
+**To enable the Watercolor Theme:**
+
+1. Right-click the Stepper extension icon and select "Options"
+2. Scroll to the "Theme Settings" section
+3. Check the "Enable Watercolor Theme" checkbox
+4. The theme will be applied immediately to the side panel
+
+**Watercolor Theme Features:**
+- Soft pastel color palette (blues, greens, pinks, purples)
+- Watercolor-style borders and backgrounds
+- Animated stepping stones instead of a traditional progress bar
+- Charming cartoon boy character that jumps across stepping stones as you progress through steps
+- Gentle, hand-drawn aesthetic inspired by The Little Prince and Winnie-the-Pooh illustrations
+- All functionality remains unchanged - only the visual appearance is enhanced
+
 ## Knowledge Base
 
 The extension includes two knowledge base implementations:
@@ -141,11 +165,14 @@ Stepper/
 │   ├── background.js      # Background service worker
 │   ├── kb.js             # Simple knowledge base module
 │   ├── kb.mock.js        # Enhanced knowledge base with detailed model
+│   ├── kb-loader.js      # KB loader with remote fetch and caching
 │   ├── validate-kb.js    # Validation script for enhanced KB
 │   ├── stepper.js        # Step navigation logic
 │   ├── sidepanel.html    # Side panel HTML
-│   ├── sidepanel.css     # Styling
-│   └── sidepanel.js      # UI controller
+│   ├── sidepanel.css     # Default theme styling
+│   ├── watercolor-theme.css  # Watercolor theme styling
+│   ├── sidepanel.js      # UI controller
+│   └── options.html      # Extension options page
 ├── assets/
 │   ├── icon16.png        # Extension icons
 │   ├── icon48.png
@@ -215,12 +242,43 @@ For the enhanced model, use the detailed schema:
 
 Run `node src/validate-kb.js` to validate your changes.
 
-### Customizing the UI
+### Customizing Themes
 
-The UI styling can be customized by modifying the CSS variables in `src/sidepanel.css`:
+#### Classic Theme
+
+The default UI styling can be customized by modifying the CSS variables in `src/sidepanel.css`:
 
 ```css
-:root {
+body.watercolor-theme {
+  /* Soft pastel color palette */
+  --watercolor-blue: #a5c9e5;
+  --watercolor-green: #b8d8be;
+  --watercolor-pink: #e5b8c0;
+  --watercolor-yellow: #f4e5a8;
+  --watercolor-purple: #c5b9e5;
+  /* ... more variables */
+}
+```
+
+The stepping stones animation and cartoon boy character are implemented using CSS and JavaScript. The boy's SVG illustration can be customized in the `createSteppingStones()` function in `src/sidepanel.js`.
+
+#### Watercolor Theme
+
+The watercolor theme can be customized by modifying the CSS variables in `src/watercolor-theme.css`:
+
+```css
+body.watercolor-theme {
+  /* Soft pastel color palette */
+  --watercolor-blue: #a5c9e5;
+  --watercolor-green: #b8d8be;
+  --watercolor-pink: #e5b8c0;
+  --watercolor-yellow: #f4e5a8;
+  --watercolor-purple: #c5b9e5;
+  /* ... more variables */
+}
+```
+
+The stepping stones animation and cartoon boy character are implemented using CSS and JavaScript. The boy's SVG illustration can be customized in the `createSteppingStones()` function in `src/sidepanel.js`.
   --primary-color: #4f46e5;
   --primary-hover: #4338ca;
   /* ... more variables */
