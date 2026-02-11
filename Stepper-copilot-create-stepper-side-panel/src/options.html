@@ -287,11 +287,27 @@
     // Check if running in extension context
     if (typeof chrome === 'undefined' || !chrome.storage) {
       console.error('This page must be opened as a Chrome extension options page');
-      document.body.innerHTML = '<div style="padding: 40px; text-align: center;">' +
-        '<h1>⚠️ Extension Context Required</h1>' +
-        '<p>This options page must be opened from within the Chrome extension.</p>' +
-        '<p>Please install the extension and access options through the extension icon.</p>' +
-        '</div>';
+      
+      // Create error message using DOM methods (safer than innerHTML)
+      const errorContainer = document.createElement('div');
+      errorContainer.style.cssText = 'padding: 40px; text-align: center;';
+      
+      const errorTitle = document.createElement('h1');
+      errorTitle.textContent = '⚠️ Extension Context Required';
+      
+      const errorMessage1 = document.createElement('p');
+      errorMessage1.textContent = 'This options page must be opened from within the Chrome extension.';
+      
+      const errorMessage2 = document.createElement('p');
+      errorMessage2.textContent = 'Please install the extension and access options through the extension icon.';
+      
+      errorContainer.appendChild(errorTitle);
+      errorContainer.appendChild(errorMessage1);
+      errorContainer.appendChild(errorMessage2);
+      
+      document.body.innerHTML = '';
+      document.body.appendChild(errorContainer);
+      
       throw new Error('Extension context required');
     }
 
@@ -331,7 +347,8 @@
         // Load theme setting
         if (watercolorThemeCheckbox) {
           const result = await chrome.storage.local.get([THEME_STORAGE_KEY]);
-          watercolorThemeCheckbox.checked = result[THEME_STORAGE_KEY] ?? false;
+          // Ensure we only set checked to true if the stored value is explicitly true
+          watercolorThemeCheckbox.checked = result[THEME_STORAGE_KEY] === true;
         }
       } catch (error) {
         console.error('Failed to load settings:', error);
