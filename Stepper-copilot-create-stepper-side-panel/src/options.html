@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stepper - Settings</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+    }
+
+    h1 {
+      color: #4f46e5;
+      margin-bottom: 10px;
+      font-size: 32px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 40px;
+      font-size: 14px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    h2 {
+      color: #1f2937;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    .description {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #4f46e5;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #4f46e5;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #4338ca;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .status.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+      display: block;
+    }
+
+    .status.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+      display: block;
+    }
+
+    .status.info {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #93c5fd;
+      display: block;
+    }
+
+    .cache-info {
+      background: #f9fafb;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    .cache-info p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #4b5563;
+    }
+
+    .cache-info strong {
+      color: #1f2937;
+    }
+
+    code {
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚙️ Stepper Settings</h1>
+    <p class="subtitle">Configure your knowledge base source</p>
+
+    <div class="section">
+      <h2>Knowledge Base Source URL</h2>
+      <p class="description">
+        Enter a URL that returns a JSON array of knowledge base articles. 
+        If left empty or if the fetch fails, the extension will use the built-in mock knowledge base.
+      </p>
+      
+      <label for="kbUrl">KB Source URL</label>
+      <input 
+        type="text" 
+        id="kbUrl" 
+        placeholder="https://example.com/api/kb-articles.json"
+      />
+      
+      <div class="button-group">
+        <button id="saveBtn" class="btn-primary">Save URL</button>
+        <button id="clearBtn" class="btn-secondary">Clear URL</button>
+        <button id="testBtn" class="btn-secondary">Test URL</button>
+      </div>
+
+      <div id="status" class="status"></div>
+    </div>
+
+    <div class="section">
+      <h2>Cache Management</h2>
+      <p class="description">
+        The KB is cached locally for better performance. You can refresh it to get the latest articles from the source.
+      </p>
+      
+      <div class="button-group">
+        <button id="refreshBtn" class="btn-primary">Refresh KB Now</button>
+        <button id="clearCacheBtn" class="btn-danger">Clear Cache</button>
+      </div>
+
+      <div id="cacheInfo" class="cache-info" style="display: none;">
+        <p><strong>Cache Status:</strong> <span id="cacheStatus">-</span></p>
+        <p><strong>Last Updated:</strong> <span id="cacheTimestamp">-</span></p>
+        <p><strong>Articles Count:</strong> <span id="articleCount">-</span></p>
+        <p><strong>Source:</strong> <span id="cacheSource">-</span></p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Expected JSON Format</h2>
+      <p class="description">
+        Your KB source URL should return a JSON array with the following structure:
+      </p>
+      <pre style="background: #f3f4f6; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 12px;"><code>[
+  {
+    "id": 1,
+    "title": "Issue Title",
+    "keywords": ["keyword1", "keyword2"],
+    "summary": "Brief summary",
+    "steps": [
+      "Step 1 instructions",
+      "Step 2 instructions"
+    ]
+  }
+]</code></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { 
+      setKBSourceUrl, 
+      getKBSourceUrl, 
+      refreshKB,
+      getCacheInfo,
+      loadKB
+    } from './src/kb-loader.js';
+
+    // Elements
+    const kbUrlInput = document.getElementById('kbUrl');
+    const saveBtn = document.getElementById('saveBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const testBtn = document.getElementById('testBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const clearCacheBtn = document.getElementById('clearCacheBtn');
+    const statusDiv = document.getElementById('status');
+    const cacheInfoDiv = document.getElementById('cacheInfo');
+
+    // Load current settings
+    async function loadSettings() {
+      const url = getKBSourceUrl();
+      kbUrlInput.value = url || '';
+      await updateCacheInfo();
+    }
+
+    // Show status message
+    function showStatus(message, type = 'info') {
+      statusDiv.textContent = message;
+      statusDiv.className = `status ${type}`;
+      setTimeout(() => {
+        statusDiv.className = 'status';
+      }, 5000);
+    }
+
+    // Update cache info display
+    async function updateCacheInfo() {
+      try {
+        const info = await getCacheInfo();
+        
+        cacheInfoDiv.style.display = 'block';
+        document.getElementById('cacheStatus').textContent = 
+          info.hasCachedKB ? 'Cached' : 'No cache';
+        document.getElementById('cacheTimestamp').textContent = 
+          info.timestampDate || 'Never';
+        document.getElementById('articleCount').textContent = 
+          info.articleCount || '0';
+        document.getElementById('cacheSource').textContent = 
+          info.sourceUrl || 'Mock KB';
+      } catch (error) {
+        console.error('Failed to get cache info:', error);
+      }
+    }
+
+    // Save URL
+    saveBtn.addEventListener('click', async () => {
+      const url = kbUrlInput.value.trim();
+      await setKBSourceUrl(url);
+      showStatus('✓ URL saved successfully', 'success');
+      await updateCacheInfo();
+    });
+
+    // Clear URL
+    clearBtn.addEventListener('click', async () => {
+      kbUrlInput.value = '';
+      await setKBSourceUrl('');
+      showStatus('✓ URL cleared - will use mock KB', 'success');
+      await updateCacheInfo();
+    });
+
+    // Test URL
+    testBtn.addEventListener('click', async () => {
+      const url = kbUrlInput.value.trim();
+      if (!url) {
+        showStatus('Please enter a URL to test', 'error');
+        return;
+      }
+
+      try {
+        showStatus('Testing URL...', 'info');
+        
+        // Save the URL temporarily
+        await setKBSourceUrl(url);
+        
+        // Try to refresh KB (will fetch from the URL)
+        const result = await refreshKB();
+        
+        if (result.source === 'remote') {
+          showStatus(`✓ Success! Loaded ${result.kb.length} articles from remote URL`, 'success');
+        } else {
+          showStatus('⚠ URL fetch failed, using fallback KB', 'error');
+        }
+        
+        await updateCacheInfo();
+      } catch (error) {
+        showStatus(`✗ Test failed: ${error.message}`, 'error');
+      }
+    });
+
+    // Refresh KB
+    refreshBtn.addEventListener('click', async () => {
+      try {
+        showStatus('Refreshing KB...', 'info');
+        const result = await refreshKB();
+        showStatus(`✓ KB refreshed from ${result.source} (${result.kb.length} articles)`, 'success');
+        await updateCacheInfo();
+      } catch (error) {
+        showStatus(`✗ Refresh failed: ${error.message}`, 'error');
+      }
+    });
+
+    // Clear cache
+    clearCacheBtn.addEventListener('click', async () => {
+      if (!confirm('Are you sure you want to clear the cache?')) {
+        return;
+      }
+
+      try {
+        await chrome.storage.local.remove(['cached_kb', 'cached_kb_timestamp']);
+        showStatus('✓ Cache cleared', 'success');
+        await updateCacheInfo();
+      } catch (error) {
+        showStatus(`✗ Failed to clear cache: ${error.message}`, 'error');
+      }
+    });
+
+    // Load settings on page load
+    loadSettings();
+  </script>
+</body>
+</html>

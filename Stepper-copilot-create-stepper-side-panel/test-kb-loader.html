@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KB Loader Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .section {
+      margin: 20px 0;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background: #4338ca;
+    }
+    input {
+      padding: 10px;
+      width: 400px;
+      margin: 5px;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .success { color: green; }
+    .error { color: red; }
+    .info { color: blue; }
+  </style>
+</head>
+<body>
+  <h1>KB Loader Test Page</h1>
+  
+  <div class="section">
+    <h2>Configuration</h2>
+    <label>
+      KB Source URL:
+      <input type="text" id="urlInput" placeholder="http://localhost:8888/test-kb.json" />
+    </label>
+    <button onclick="setUrl()">Set URL</button>
+    <button onclick="clearUrl()">Clear URL</button>
+    <div id="currentUrl" class="info" style="margin-top: 10px;"></div>
+  </div>
+
+  <div class="section">
+    <h2>KB Operations</h2>
+    <button onclick="loadKB()">Load KB</button>
+    <button onclick="refreshKB()">Refresh KB</button>
+    <button onclick="getCacheInfo()">Get Cache Info</button>
+    <div id="kbInfo" style="margin-top: 10px;"></div>
+  </div>
+
+  <div class="section">
+    <h2>Search Test</h2>
+    <label>
+      Search Query:
+      <input type="text" id="searchInput" placeholder="e.g., wifi problem" />
+    </label>
+    <button onclick="searchKB()">Search</button>
+    <div id="searchResult" style="margin-top: 10px;"></div>
+  </div>
+
+  <div class="section">
+    <h2>Results</h2>
+    <pre id="output">Ready to test...</pre>
+  </div>
+
+  <script type="module">
+    // Mock chrome.storage API for testing
+    window.chrome = {
+      storage: {
+        local: {
+          data: {},
+          async get(keys) {
+            const result = {};
+            if (Array.isArray(keys)) {
+              keys.forEach(key => {
+                if (this.data[key] !== undefined) {
+                  result[key] = this.data[key];
+                }
+              });
+            }
+            return result;
+          },
+          async set(items) {
+            Object.assign(this.data, items);
+          }
+        }
+      }
+    };
+
+    // Import KB loader functions
+    import { 
+      setKBSourceUrl, 
+      getKBSourceUrl, 
+      loadKB as loadKBFunc, 
+      refreshKB as refreshKBFunc,
+      getCacheInfo as getCacheInfoFunc,
+      findBestMatch 
+    } from './src/kb-loader.js';
+
+    // Make functions available globally
+    window.kbLoader = {
+      setKBSourceUrl,
+      getKBSourceUrl,
+      loadKB: loadKBFunc,
+      refreshKB: refreshKBFunc,
+      getCacheInfo: getCacheInfoFunc,
+      findBestMatch
+    };
+
+    // Display current URL on load
+    showCurrentUrl();
+
+    async function showCurrentUrl() {
+      const url = window.kbLoader.getKBSourceUrl();
+      document.getElementById('currentUrl').innerHTML = 
+        `Current URL: ${url || '<em>Not set (will use mock KB)</em>'}`;
+    }
+
+    window.setUrl = async function() {
+      const url = document.getElementById('urlInput').value.trim();
+      await window.kbLoader.setKBSourceUrl(url);
+      log(`✓ URL set to: ${url}`, 'success');
+      showCurrentUrl();
+    };
+
+    window.clearUrl = async function() {
+      await window.kbLoader.setKBSourceUrl('');
+      document.getElementById('urlInput').value = '';
+      log('✓ URL cleared', 'success');
+      showCurrentUrl();
+    };
+
+    window.loadKB = async function() {
+      try {
+        log('Loading KB...', 'info');
+        const result = await window.kbLoader.loadKB();
+        log(`✓ KB loaded from ${result.source}`, 'success');
+        log(`Articles: ${result.kb.length}`, 'info');
+        log(JSON.stringify(result, null, 2));
+      } catch (error) {
+        log(`✗ Error: ${error.message}`, 'error');
+      }
+    };
+
+    window.refreshKB = async function() {
+      try {
+        log('Refreshing KB...', 'info');
+        const result = await window.kbLoader.refreshKB();
+        log(`✓ KB refreshed from ${result.source}`, 'success');
+        log(`Articles: ${result.kb.length}`, 'info');
+        log(JSON.stringify(result, null, 2));
+      } catch (error) {
+        log(`✗ Error: ${error.message}`, 'error');
+      }
+    };
+
+    window.getCacheInfo = async function() {
+      try {
+        const info = await window.kbLoader.getCacheInfo();
+        log('Cache Info:', 'info');
+        log(JSON.stringify(info, null, 2));
+      } catch (error) {
+        log(`✗ Error: ${error.message}`, 'error');
+      }
+    };
+
+    window.searchKB = async function() {
+      try {
+        const query = document.getElementById('searchInput').value.trim();
+        if (!query) {
+          alert('Please enter a search query');
+          return;
+        }
+        
+        log(`Searching for: "${query}"...`, 'info');
+        const result = await window.kbLoader.findBestMatch(query);
+        
+        if (result) {
+          log('✓ Found match:', 'success');
+          document.getElementById('searchResult').innerHTML = `
+            <strong>${result.title}</strong><br/>
+            <em>${result.summary}</em><br/>
+            Steps: ${result.steps.length}
+          `;
+          log(JSON.stringify(result, null, 2));
+        } else {
+          log('✗ No match found', 'error');
+          document.getElementById('searchResult').innerHTML = 'No matching article found';
+        }
+      } catch (error) {
+        log(`✗ Error: ${error.message}`, 'error');
+      }
+    };
+
+    function log(message, type = '') {
+      const output = document.getElementById('output');
+      const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+      const className = type ? `class="${type}"` : '';
+      const line = `<span ${className}>[${timestamp}] ${message}</span>\n`;
+      output.innerHTML += line;
+      output.scrollTop = output.scrollHeight;
+    }
+  </script>
+</body>
+</html>
