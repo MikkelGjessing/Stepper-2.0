@@ -427,18 +427,22 @@
       }
     });
 
+    // Handle theme toggle
+    if (watercolorThemeCheckbox) {
+      watercolorThemeCheckbox.addEventListener('change', async () => {
+        try {
+          await chrome.storage.local.set({ watercolorTheme: watercolorThemeCheckbox.checked });
+          showThemeStatus('✓ Theme preference saved', 'success');
+        } catch (error) {
+          showThemeStatus(`✗ Failed to save theme: ${error.message}`, 'error');
+        }
+      });
+    } else {
+      console.error('Watercolor theme checkbox not found');
+    }
+
     // Load settings on page load
     loadSettings();
-
-    // Handle theme toggle
-    watercolorThemeCheckbox.addEventListener('change', async () => {
-      try {
-        await chrome.storage.local.set({ watercolorTheme: watercolorThemeCheckbox.checked });
-        showThemeStatus('✓ Theme preference saved', 'success');
-      } catch (error) {
-        showThemeStatus(`✗ Failed to save theme: ${error.message}`, 'error');
-      }
-    });
   </script>
 </body>
 </html>
