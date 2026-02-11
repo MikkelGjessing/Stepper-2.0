@@ -15,17 +15,21 @@ Stepper is a browser extension that provides step-by-step support guidance throu
 - ⚠️ **Feedback Mechanism**: "This didn't work" button for user feedback
 - 🎨 **Modern UI**: Clean, intuitive interface with visual progress indicators
 - 🏗️ **Modular Architecture**: Separate modules for UI, retrieval, and step logic
+- 🌐 **Remote KB Support**: Fetch knowledge base articles from a remote URL with automatic fallback to local mock KB
+- 💾 **Smart Caching**: Cache fetched articles locally for better performance with automatic refresh on demand
 
 ## Architecture
 
 The extension is built with a clean modular architecture:
 
-- **`src/kb.js`**: Knowledge Base module - handles article storage and retrieval logic
+- **`src/kb.js`**: Knowledge Base module - handles article storage and retrieval logic (mock KB)
+- **`src/kb-loader.js`**: KB Loader module - fetches articles from remote URL, caches them, and falls back to mock KB
 - **`src/stepper.js`**: Step Logic module - manages step navigation and state
 - **`src/sidepanel.js`**: UI module - controls user interactions and view updates
 - **`src/sidepanel.html`**: HTML structure for the side panel
 - **`src/sidepanel.css`**: Modern styling for the UI
 - **`src/background.js`**: Background service worker for extension setup
+- **`src/options.html`**: Options page for configuring KB source URL and cache management
 
 ## Installation
 
@@ -51,6 +55,39 @@ The extension is built with a clean modular architecture:
    - **Reset**: Start over from step 1
    - **This didn't work**: Provide feedback about the step
    - **Open full article**: View all steps at once
+
+### Configuring Remote Knowledge Base (Optional)
+
+The extension can fetch articles from a remote JSON endpoint:
+
+1. Right-click the Stepper extension icon and select "Options" (or go to `chrome://extensions/` and click "Extension options")
+2. Enter your KB source URL (e.g., `https://api.example.com/kb-articles.json`)
+3. Click "Test URL" to verify the connection
+4. Click "Save URL" to persist the configuration
+5. The extension will automatically fetch and cache articles from the remote source
+6. If the URL is not set or fetch fails, the extension falls back to the built-in mock KB
+
+**Remote KB Features:**
+- **Automatic Caching**: Fetched articles are cached locally for better performance
+- **Smart Fallback**: If remote fetch fails, uses cached KB or falls back to mock KB
+- **Manual Refresh**: Refresh the cache on-demand via the Options page
+- **Timestamp Tracking**: See when the KB was last updated
+
+**Expected JSON Format:**
+```json
+[
+  {
+    "id": 1,
+    "title": "Article Title",
+    "keywords": ["keyword1", "keyword2"],
+    "summary": "Brief summary of the issue and solution",
+    "steps": [
+      "Step 1 instructions",
+      "Step 2 instructions"
+    ]
+  }
+]
+```
 
 ## Knowledge Base
 

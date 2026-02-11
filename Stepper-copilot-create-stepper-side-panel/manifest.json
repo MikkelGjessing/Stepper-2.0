@@ -12,12 +12,14 @@
     "default_path": "src/sidepanel.html"
   },
   "permissions": [
-    "sidePanel"
+    "sidePanel",
+    "storage"
   ],
   "action": {
     "default_title": "Open Stepper"
   },
   "background": {
     "service_worker": "src/background.js"
-  }
+  },
+  "options_page": "src/options.html"
 }
