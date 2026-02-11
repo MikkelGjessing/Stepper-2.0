@@ -7,23 +7,36 @@ const stepManager = new StepManager();
 
 // Initialize theme
 async function initTheme() {
-  const result = await chrome.storage.local.get(['watercolorTheme']);
-  if (result.watercolorTheme) {
-    document.body.classList.add('watercolor-theme');
-  }
-  
-  // Listen for theme changes
-  chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (namespace === 'local' && changes.watercolorTheme) {
-      if (changes.watercolorTheme.newValue) {
+  // Check if chrome API is available (extension context)
+  if (typeof chrome !== 'undefined' && chrome.storage) {
+    try {
+      const result = await chrome.storage.local.get(['watercolorTheme']);
+      if (result.watercolorTheme) {
         document.body.classList.add('watercolor-theme');
-        updateProgressDisplay();
-      } else {
-        document.body.classList.remove('watercolor-theme');
-        updateProgressDisplay();
       }
+      
+      // Listen for theme changes
+      chrome.storage.onChanged.addListener((changes, namespace) => {
+        if (namespace === 'local' && changes.watercolorTheme) {
+          if (changes.watercolorTheme.newValue) {
+            document.body.classList.add('watercolor-theme');
+            updateProgressDisplay();
+          } else {
+            document.body.classList.remove('watercolor-theme');
+            updateProgressDisplay();
+          }
+        }
+      });
+    } catch (error) {
+      console.warn('Chrome storage not available, using default theme');
     }
-  });
+  } else {
+    // For testing outside extension context, check URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('theme') === 'watercolor') {
+      document.body.classList.add('watercolor-theme');
+    }
+  }
 }
 
 // Initialize theme on load
