@@ -249,18 +249,12 @@ Run `node src/validate-kb.js` to validate your changes.
 The default UI styling can be customized by modifying the CSS variables in `src/sidepanel.css`:
 
 ```css
-body.watercolor-theme {
-  /* Soft pastel color palette */
-  --watercolor-blue: #a5c9e5;
-  --watercolor-green: #b8d8be;
-  --watercolor-pink: #e5b8c0;
-  --watercolor-yellow: #f4e5a8;
-  --watercolor-purple: #c5b9e5;
+:root {
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
   /* ... more variables */
 }
 ```
-
-The stepping stones animation and cartoon boy character are implemented using CSS and JavaScript. The boy's SVG illustration can be customized in the `createSteppingStones()` function in `src/sidepanel.js`.
 
 #### Watercolor Theme
 
@@ -279,10 +273,6 @@ body.watercolor-theme {
 ```
 
 The stepping stones animation and cartoon boy character are implemented using CSS and JavaScript. The boy's SVG illustration can be customized in the `createSteppingStones()` function in `src/sidepanel.js`.
-  --primary-color: #4f46e5;
-  --primary-hover: #4338ca;
-  /* ... more variables */
-}
 ```
 
 ## Browser Compatibility
