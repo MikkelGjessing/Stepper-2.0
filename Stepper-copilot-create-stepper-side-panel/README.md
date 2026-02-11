@@ -273,7 +273,6 @@ body.watercolor-theme {
 ```
 
 The stepping stones animation and cartoon boy character are implemented using CSS and JavaScript. The boy's SVG illustration can be customized in the `createSteppingStones()` function in `src/sidepanel.js`.
-```
 
 ## Browser Compatibility
 
