@@ -258,8 +258,9 @@
       getKBSourceUrl, 
       refreshKB,
       getCacheInfo,
-      loadKB
-    } from './src/kb-loader.js';
+      loadKB,
+      initKBLoader
+    } from './kb-loader.js';
 
     // Elements
     const kbUrlInput = document.getElementById('kbUrl');
@@ -273,6 +274,8 @@
 
     // Load current settings
     async function loadSettings() {
+      // Ensure KB loader is initialized before getting URL
+      await initKBLoader();
       const url = getKBSourceUrl();
       kbUrlInput.value = url || '';
       await updateCacheInfo();

@@ -215,13 +215,14 @@ async function findBestMatch(query) {
     // Check keyword matches
     if (article.keywords && Array.isArray(article.keywords)) {
       article.keywords.forEach(keyword => {
-        if (queryLower.includes(keyword)) {
+        const keywordLower = keyword.toLowerCase();
+        if (queryLower.includes(keywordLower)) {
           score += 10; // Strong match for keyword
         }
         
         // Check for partial word matches
         queryWords.forEach(word => {
-          if (word.length > 3 && keyword.includes(word)) {
+          if (word.length > 3 && keywordLower.includes(word)) {
             score += 5;
           }
         });
@@ -278,5 +279,6 @@ export {
   refreshKB, 
   setKBSourceUrl, 
   getKBSourceUrl,
-  getCacheInfo 
+  getCacheInfo,
+  initKBLoader 
 };
