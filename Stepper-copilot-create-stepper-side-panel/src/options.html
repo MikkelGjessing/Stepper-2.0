@@ -293,6 +293,9 @@
       initKBLoader
     } from './kb-loader.js';
 
+    // Storage keys
+    const THEME_STORAGE_KEY = 'watercolorTheme';
+
     // Elements
     const kbUrlInput = document.getElementById('kbUrl');
     const saveBtn = document.getElementById('saveBtn');
@@ -316,8 +319,8 @@
         
         // Load theme setting
         if (watercolorThemeCheckbox) {
-          const result = await chrome.storage.local.get(['watercolorTheme']);
-          watercolorThemeCheckbox.checked = result.watercolorTheme || false;
+          const result = await chrome.storage.local.get([THEME_STORAGE_KEY]);
+          watercolorThemeCheckbox.checked = result[THEME_STORAGE_KEY] ?? false;
         }
       } catch (error) {
         console.error('Failed to load settings:', error);
@@ -438,7 +441,7 @@
     if (watercolorThemeCheckbox) {
       watercolorThemeCheckbox.addEventListener('change', async () => {
         try {
-          await chrome.storage.local.set({ watercolorTheme: watercolorThemeCheckbox.checked });
+          await chrome.storage.local.set({ [THEME_STORAGE_KEY]: watercolorThemeCheckbox.checked });
           showThemeStatus('✓ Theme preference saved', 'success');
         } catch (error) {
           showThemeStatus(`✗ Failed to save theme: ${error.message}`, 'error');
