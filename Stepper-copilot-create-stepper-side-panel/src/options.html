@@ -305,8 +305,8 @@
       errorContainer.appendChild(errorMessage1);
       errorContainer.appendChild(errorMessage2);
       
-      document.body.innerHTML = '';
-      document.body.appendChild(errorContainer);
+      // Clear body safely using replaceChildren (modern approach)
+      document.body.replaceChildren(errorContainer);
       
       throw new Error('Extension context required');
     }
@@ -321,6 +321,7 @@
     } from './kb-loader.js';
 
     // Storage keys
+    // Note: This key is also used in sidepanel.js - keep in sync or extract to shared constants file
     const THEME_STORAGE_KEY = 'watercolorTheme';
 
     // Elements
