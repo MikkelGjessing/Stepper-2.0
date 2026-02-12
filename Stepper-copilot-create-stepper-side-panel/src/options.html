@@ -284,6 +284,33 @@
   </div>
 
   <script type="module">
+    // Check if running in extension context
+    if (typeof chrome === 'undefined' || !chrome.storage) {
+      console.error('This page must be opened as a Chrome extension options page');
+      
+      // Create error message using DOM methods (safer than innerHTML)
+      const errorContainer = document.createElement('div');
+      errorContainer.style.cssText = 'padding: 40px; text-align: center;';
+      
+      const errorTitle = document.createElement('h1');
+      errorTitle.textContent = '⚠️ Extension Context Required';
+      
+      const errorMessage1 = document.createElement('p');
+      errorMessage1.textContent = 'This options page must be opened from within the Chrome extension.';
+      
+      const errorMessage2 = document.createElement('p');
+      errorMessage2.textContent = 'Please install the extension and access options through the extension icon.';
+      
+      errorContainer.appendChild(errorTitle);
+      errorContainer.appendChild(errorMessage1);
+      errorContainer.appendChild(errorMessage2);
+      
+      // Clear body safely using replaceChildren (modern approach)
+      document.body.replaceChildren(errorContainer);
+      
+      throw new Error('Extension context required');
+    }
+
     import { 
       setKBSourceUrl, 
       getKBSourceUrl, 
@@ -292,6 +319,10 @@
       loadKB,
       initKBLoader
     } from './kb-loader.js';
+
+    // Storage keys
+    // Note: This key is also used in sidepanel.js - keep in sync or extract to shared constants file
+    const THEME_STORAGE_KEY = 'watercolorTheme';
 
     // Elements
     const kbUrlInput = document.getElementById('kbUrl');
@@ -307,15 +338,23 @@
 
     // Load current settings
     async function loadSettings() {
-      // Ensure KB loader is initialized before getting URL
-      await initKBLoader();
-      const url = getKBSourceUrl();
-      kbUrlInput.value = url || '';
-      await updateCacheInfo();
-      
-      // Load theme setting
-      const result = await chrome.storage.local.get(['watercolorTheme']);
-      watercolorThemeCheckbox.checked = result.watercolorTheme || false;
+      try {
+        // Ensure KB loader is initialized before getting URL
+        await initKBLoader();
+        const url = getKBSourceUrl();
+        kbUrlInput.value = url || '';
+        await updateCacheInfo();
+        
+        // Load theme setting
+        if (watercolorThemeCheckbox) {
+          const result = await chrome.storage.local.get([THEME_STORAGE_KEY]);
+          // Ensure we only set checked to true if the stored value is explicitly true
+          watercolorThemeCheckbox.checked = result[THEME_STORAGE_KEY] === true;
+        }
+      } catch (error) {
+        console.error('Failed to load settings:', error);
+        showStatus(`Failed to load settings: ${error.message}`, 'error');
+      }
     }
 
     // Show status message
@@ -427,18 +466,22 @@
       }
     });
 
+    // Handle theme toggle
+    if (watercolorThemeCheckbox) {
+      watercolorThemeCheckbox.addEventListener('change', async () => {
+        try {
+          await chrome.storage.local.set({ [THEME_STORAGE_KEY]: watercolorThemeCheckbox.checked });
+          showThemeStatus('✓ Theme preference saved', 'success');
+        } catch (error) {
+          showThemeStatus(`✗ Failed to save theme: ${error.message}`, 'error');
+        }
+      });
+    } else {
+      console.error('Watercolor theme checkbox not found');
+    }
+
     // Load settings on page load
     loadSettings();
-
-    // Handle theme toggle
-    watercolorThemeCheckbox.addEventListener('change', async () => {
-      try {
-        await chrome.storage.local.set({ watercolorTheme: watercolorThemeCheckbox.checked });
-        showThemeStatus('✓ Theme preference saved', 'success');
-      } catch (error) {
-        showThemeStatus(`✗ Failed to save theme: ${error.message}`, 'error');
-      }
-    });
   </script>
 </body>
 </html>
