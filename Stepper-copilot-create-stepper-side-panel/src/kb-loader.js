@@ -275,7 +275,7 @@ async function getAllArticles() {
 async function getCacheInfo() {
   // Ensure initialization is complete before proceeding
   await ensureInitialized();
-  
+
   const cached = await loadCachedKB();
   return {
     hasCachedKB: cached !== null,
