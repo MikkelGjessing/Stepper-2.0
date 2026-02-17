@@ -14,6 +14,9 @@ let kbSourceUrl = '';
 // In-memory cache for current session
 let cachedKB = null;
 
+// Promise to track initialization status
+let initPromise = null;
+
 /**
  * Initialize the KB loader by loading the source URL from storage
  */
@@ -25,6 +28,15 @@ async function initKBLoader() {
     }
   } catch (error) {
     console.warn('Failed to load KB source URL from storage:', error);
+  }
+}
+
+/**
+ * Ensure initialization is complete before proceeding
+ */
+async function ensureInitialized() {
+  if (initPromise) {
+    await initPromise;
   }
 }
 
@@ -128,6 +140,9 @@ function getMockKB() {
  * @returns {Promise<Object>} - Object with kb array and metadata
  */
 async function loadKB(forceRefresh = false) {
+  // Ensure initialization is complete before proceeding
+  await ensureInitialized();
+
   // Return in-memory cache if available and not forcing refresh
   if (!forceRefresh && cachedKB !== null) {
     return {
@@ -258,6 +273,9 @@ async function getAllArticles() {
  * @returns {Promise<Object>} - Information about the current cache
  */
 async function getCacheInfo() {
+  // Ensure initialization is complete before proceeding
+  await ensureInitialized();
+
   const cached = await loadCachedKB();
   return {
     hasCachedKB: cached !== null,
@@ -268,8 +286,8 @@ async function getCacheInfo() {
   };
 }
 
-// Initialize on module load
-initKBLoader();
+// Initialize on module load and store the promise
+initPromise = initKBLoader();
 
 // Export functions for use in other modules
 export { 
